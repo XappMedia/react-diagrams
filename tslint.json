@@ -22,6 +22,7 @@
 		"trailing-comma": false,
 		"one-line": false,
 		"object-literal-shorthand": false,
+		"no-console": false,
 		"no-string-literal": false,
 		"ordered-imports": false,
 		"prefer-for-of": false,

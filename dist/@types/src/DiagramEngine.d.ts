@@ -38,6 +38,7 @@ export declare class DiagramEngine extends BaseEntity<DiagramEngineListener> {
     };
     diagramModel: DiagramModel;
     canvas: Element;
+    isMoving: boolean;
     paintableWidgets: {};
     linksThatHaveInitiallyRendered: {};
     nodesRendered: boolean;
@@ -48,6 +49,9 @@ export declare class DiagramEngine extends BaseEntity<DiagramEngineListener> {
     hAdjustmentFactor: number;
     vAdjustmentFactor: number;
     constructor();
+    startMove(): void;
+    stopMove(): void;
+    getMove(): boolean;
     installDefaultFactories(): void;
     repaintCanvas(): void;
     clearRepaintEntities(): void;

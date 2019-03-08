@@ -42,6 +42,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 
 	diagramModel: DiagramModel;
 	canvas: Element;
+	isMoving: boolean;
 	paintableWidgets: {};
 	linksThatHaveInitiallyRendered: {};
 	nodesRendered: boolean;
@@ -63,6 +64,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		this.portFactories = {};
 		this.labelFactories = {};
 		this.canvas = null;
+		this.isMoving = false;
 		this.paintableWidgets = null;
 		this.linksThatHaveInitiallyRendered = {};
 
@@ -74,6 +76,21 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 				(window as any)["diagram_instance"] = this;
 			}
 		}
+	}
+
+	startMove() {
+		console.log("startMove");
+		this.isMoving = true;
+	}
+
+	stopMove() {
+		console.log("stopMove");
+		this.isMoving = false;
+	}
+
+	getMove() {
+		console.log("getMove");
+		return this.isMoving;
 	}
 
 	installDefaultFactories() {

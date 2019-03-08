@@ -314,6 +314,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 
 	onMouseUp(event) {
 		var diagramEngine = this.props.diagramEngine;
+
 		//are we going to connect a link to something?
 		if (this.state.action instanceof MoveItemsAction) {
 			var element = this.getMouseElement(event);
@@ -477,8 +478,9 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 					}
 				}}
 				onMouseDown={event => {
-					if (event.nativeEvent.which === 3) return;
+					if (event.nativeEvent.which === 3) { return };
 					this.setState({ ...this.state, wasMoved: false });
+					diagramEngine.stopMove();
 
 					diagramEngine.clearRepaintEntities();
 					var model = this.getMouseElement(event);
@@ -489,6 +491,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 							var relative = diagramEngine.getRelativePoint(event.clientX, event.clientY);
 							this.startFiringAction(new SelectingAction(relative.x, relative.y));
 						} else {
+							diagramEngine.startMove();
 							//its a drag the canvas event
 							diagramModel.clearSelection();
 							this.startFiringAction(new MoveCanvasAction(event.clientX, event.clientY, diagramModel));
@@ -523,11 +526,15 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 							diagramModel.clearSelection();
 						}
 					} else {
-						//its some or other element, probably want to move it
+						diagramEngine.startMove();
+						// its some or other element, probably want to move it
 						if (!event.shiftKey && !model.model.isSelected()) {
 							diagramModel.clearSelection();
 						}
-						model.model.setSelected(true);
+
+						if (!diagramEngine.isMoving) {
+							model.model.setSelected(true);
+						}
 
 						this.startFiringAction(new MoveItemsAction(event.clientX, event.clientY, diagramEngine));
 					}
