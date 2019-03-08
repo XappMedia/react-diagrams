@@ -50,7 +50,7 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 	}
 
 	getSelectedEntities() {
-		let entities = super.getSelectedEntities();
+		let entities: any[] = super.getSelectedEntities();
 
 		// add the points of each link that are selected here
 		if (this.isSelected()) {
