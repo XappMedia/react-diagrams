@@ -22,7 +22,7 @@
 	"scripts": {
 		"build:ts": "webpack",
 		"build:ts:prod": "cross-env NODE_ENV=production webpack",
-		"build:sass:prod": "node-sass --output-style compressed ./src/sass/main.scss > ./dist/style.min.css",
+		"build:sass:prod": "node-sass --output-style compressed ./src/sass/main.scss > ./dist/react-diagrams.min.css",
 		"storybook": "start-storybook -p 9001 -c .storybook",
 		"storybook:build": "build-storybook -c .storybook -o .out",
 		"storybook:github": "storybook-to-ghpages",

@@ -370,11 +370,14 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 
 			//remove any invalid links
 			_.forEach(this.state.action.selectionModels, model => {
-
 				if (model.model instanceof NodeModel) {
 					if (!this.state.wasMoved) {
 						model.model.nodeClicked();
 					}
+				}
+
+				if (model.model instanceof LinkModel) {
+					model.model.linkClicked();
 				}
 
 				//only care about points connecting to things
@@ -385,6 +388,7 @@ export class DiagramWidget extends BaseWidget<DiagramProps, DiagramState> {
 				let link: LinkModel = model.model.getLink();
 				let sourcePort: PortModel = link.getSourcePort();
 				let targetPort: PortModel = link.getTargetPort();
+
 				if (sourcePort !== null && targetPort !== null) {
 					if (!sourcePort.canLinkToPort(targetPort)) {
 						//link not allowed

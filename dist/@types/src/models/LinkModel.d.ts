@@ -6,6 +6,7 @@ import { LabelModel } from "./LabelModel";
 import { DiagramEngine } from "../DiagramEngine";
 import { DiagramModel } from "./DiagramModel";
 export interface LinkModelListener extends BaseModelListener {
+    linkClicked?(event: BaseEvent<LinkModel>): void;
     sourcePortChanged?(event: BaseEvent<LinkModel> & {
         port: null | PortModel;
     }): void;
@@ -52,6 +53,7 @@ export declare class LinkModel<T extends LinkModelListener = LinkModelListener> 
         })[];
     };
     doClone(lookupTable: {}, clone: any): void;
+    linkClicked(): void;
     remove(): void;
     isLastPoint(point: PointModel): boolean;
     getPointIndex(point: PointModel): number;

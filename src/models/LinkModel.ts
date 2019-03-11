@@ -8,8 +8,8 @@ import { DiagramEngine } from "../DiagramEngine";
 import { DiagramModel } from "./DiagramModel";
 
 export interface LinkModelListener extends BaseModelListener {
+	linkClicked?(event: BaseEvent<LinkModel>): void;
 	sourcePortChanged?(event: BaseEvent<LinkModel> & { port: null | PortModel }): void;
-
 	targetPortChanged?(event: BaseEvent<LinkModel> & { port: null | PortModel }): void;
 }
 
@@ -90,6 +90,12 @@ export class LinkModel<T extends LinkModelListener = LinkModelListener> extends 
 		if (this.targetPort) {
 			clone.setTargetPort(this.targetPort.clone(lookupTable));
 		}
+	}
+
+	linkClicked() {
+		this.iterateListeners(
+			(listener: LinkModelListener, event) => listener.linkClicked && listener.linkClicked(event)
+		);
 	}
 
 	remove() {
