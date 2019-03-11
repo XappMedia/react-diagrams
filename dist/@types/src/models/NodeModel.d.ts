@@ -4,6 +4,7 @@ import { PortModel } from "./PortModel";
 import { DiagramEngine } from "../DiagramEngine";
 import { DiagramModel } from "./DiagramModel";
 export interface NodeModelListener extends BaseModelListener {
+    nodeClicked?(event: BaseEvent<NodeModel>): void;
     positionChanged?(event: BaseEvent<NodeModel>): void;
 }
 export declare class NodeModel<T extends NodeModelListener = NodeModelListener> extends BaseModel<DiagramModel, T> {
@@ -17,6 +18,7 @@ export declare class NodeModel<T extends NodeModelListener = NodeModelListener> 
     height: number;
     constructor(nodeType?: string, id?: string);
     setPosition(x: any, y: any): void;
+    nodeClicked(): void;
     positionChanged(): void;
     getSelectedEntities(): any[];
     deSerialize(ob: any, engine: DiagramEngine): void;

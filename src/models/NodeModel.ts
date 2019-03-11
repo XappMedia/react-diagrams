@@ -7,6 +7,7 @@ import { DiagramEngine } from "../DiagramEngine";
 import { DiagramModel } from "./DiagramModel";
 
 export interface NodeModelListener extends BaseModelListener {
+	nodeClicked?(event: BaseEvent<NodeModel>): void;
 	positionChanged?(event: BaseEvent<NodeModel>): void;
 }
 
@@ -41,6 +42,12 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 		});
 		this.x = x;
 		this.y = y;
+	}
+
+	nodeClicked() {
+		this.iterateListeners(
+			(listener: NodeModelListener, event) => listener.nodeClicked && listener.nodeClicked(event)
+		)
 	}
 
 	positionChanged() {

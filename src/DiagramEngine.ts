@@ -78,20 +78,20 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		}
 	}
 
-	startMove() {
-		console.log("startMove");
-		this.isMoving = true;
-	}
+	// startMove() {
+	// 	console.log("startMove");
+	// 	this.isMoving = true;
+	// }
 
-	stopMove() {
-		console.log("stopMove");
-		this.isMoving = false;
-	}
+	// stopMove() {
+	// 	console.log("stopMove");
+	// 	this.isMoving = false;
+	// }
 
-	getMove() {
-		console.log("getMove");
-		return this.isMoving;
-	}
+	// getMove() {
+	// 	console.log("getMove");
+	// 	return this.isMoving;
+	// }
 
 	installDefaultFactories() {
 		this.registerNodeFactory(new DefaultNodeFactory());
