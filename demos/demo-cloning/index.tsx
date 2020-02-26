@@ -7,7 +7,7 @@ import {
 	DiagramWidget,
 	BaseModel
 } from "storm-react-diagrams";
-import forEach from "lodash/forEach"
+import forEach from "lodash/forEach";
 import * as React from "react";
 import { DemoWorkspaceWidget } from "../.helpers/DemoWorkspaceWidget";
 

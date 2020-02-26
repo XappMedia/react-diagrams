@@ -49,7 +49,7 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 	nodeClicked() {
 		this.iterateListeners(
 			(listener: NodeModelListener, event) => listener.nodeClicked && listener.nodeClicked(event)
-		)
+		);
 	}
 
 	positionChanged() {
