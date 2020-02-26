@@ -2,6 +2,7 @@
 	"compileOnSave": false,
 	"name": "storm-react-diagrams",
 	"compilerOptions": {
+		"esModuleInterop": true,
 		"suppressExcessPropertyErrors": true,
 		"declaration": true,
 		"outDir": "@types",

@@ -1,5 +1,5 @@
 import { BaseEntity, BaseListener } from "../BaseEntity";
-import * as _ from "lodash";
+import merge from "lodash/merge";
 import { BaseEvent } from "../BaseEntity";
 import { DiagramEngine } from "../DiagramEngine";
 
@@ -48,7 +48,7 @@ export class BaseModel<
 	}
 
 	public serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			type: this.type,
 			selected: this.selected
 		});

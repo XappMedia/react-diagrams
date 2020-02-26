@@ -7,7 +7,7 @@ import {
 	DiagramWidget,
 	BaseModel
 } from "storm-react-diagrams";
-import * as _ from "lodash";
+import forEach from "lodash/forEach"
 import * as React from "react";
 import { DemoWorkspaceWidget } from "../.helpers/DemoWorkspaceWidget";
 
@@ -26,7 +26,7 @@ class CloneSelected extends React.Component<any, any> {
 		let model = engine.getDiagramModel();
 
 		let itemMap = {};
-		_.forEach(model.getSelectedItems(), (item: BaseModel<any>) => {
+		forEach(model.getSelectedItems(), (item: BaseModel<any>) => {
 			let newItem = item.clone(itemMap);
 
 			// offset the nodes slightly

@@ -1,6 +1,6 @@
 import { BaseModel } from "./BaseModel";
 import { LinkModel } from "./LinkModel";
-import * as _ from "lodash";
+import merge from "lodash/merge";
 import { DiagramEngine } from "../DiagramEngine";
 
 export class LabelModel extends BaseModel<LinkModel> {
@@ -20,7 +20,7 @@ export class LabelModel extends BaseModel<LinkModel> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			offsetX: this.offsetX,
 			offsetY: this.offsetY
 		});

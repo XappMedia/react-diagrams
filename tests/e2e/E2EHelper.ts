@@ -1,5 +1,6 @@
 import { ElementHandle, Page } from "puppeteer";
-import * as _ from "lodash";
+import difference from "lodash/difference";
+import flatMap from "lodash/flatMap";
 
 export class E2EElement {
 	helper: E2EHelper;
@@ -39,7 +40,7 @@ export class E2EPort extends E2EElement {
 	}
 
 	async link(port: E2EPort): Promise<E2ELink> {
-		let currentLinks = _.flatMap((await this.parent.model()).ports, "links");
+		let currentLinks = flatMap((await this.parent.model()).ports, "links");
 
 		let bounds = await this.element.boundingBox();
 
@@ -55,12 +56,12 @@ export class E2EPort extends E2EElement {
 
 		// get the parent to get the link
 		return await this.helper.link(
-			_.difference(_.flatMap((await this.parent.model()).ports, "links"), currentLinks)[0]
+			difference(flatMap((await this.parent.model()).ports, "links"), currentLinks)[0]
 		);
 	}
 
 	async linkToPoint(x: number, y: number): Promise<E2ELink> {
-		let currentLinks = _.flatMap((await this.parent.model()).ports, "links");
+		let currentLinks = flatMap((await this.parent.model()).ports, "links");
 
 		let bounds = await this.element.boundingBox();
 
@@ -74,7 +75,7 @@ export class E2EPort extends E2EElement {
 
 		// get the parent to get the link
 		return await this.helper.link(
-			_.difference(_.flatMap((await this.parent.model()).ports, "links"), currentLinks)[0]
+			difference(flatMap((await this.parent.model()).ports, "links"), currentLinks)[0]
 		);
 	}
 }

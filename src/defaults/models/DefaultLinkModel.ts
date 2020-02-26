@@ -3,7 +3,7 @@
  */
 import { LinkModel, LinkModelListener } from "../../models/LinkModel";
 import { BaseEvent } from "../../BaseEntity";
-import * as _ from "lodash";
+import merge from "lodash/merge";
 import { PointModel } from "../../models/PointModel";
 import { DiagramEngine } from "../../DiagramEngine";
 import { DefaultLabelModel } from "./DefaultLabelModel";
@@ -28,7 +28,7 @@ export class DefaultLinkModel extends LinkModel<DefaultLinkModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			width: this.width,
 			color: this.color,
 			curvyness: this.curvyness

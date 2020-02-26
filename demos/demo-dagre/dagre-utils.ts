@@ -1,5 +1,5 @@
 import * as dagre from "dagre";
-import * as _ from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 
 const size = {
 	width: 60,
@@ -7,7 +7,7 @@ const size = {
 };
 
 export function distributeElements(model) {
-	let clonedModel = _.cloneDeep(model);
+	let clonedModel = cloneDeep(model);
 	let nodes = distributeGraph(clonedModel);
 	nodes.forEach(node => {
 		let modelNode = clonedModel.nodes.find(item => item.id === node.id);

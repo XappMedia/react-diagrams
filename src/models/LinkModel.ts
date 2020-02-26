@@ -1,7 +1,9 @@
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { PortModel } from "./PortModel";
 import { PointModel } from "./PointModel";
-import * as _ from "lodash";
+import forEach from "lodash/forEach";
+import map from "lodash/map";
+import merge from "lodash/merge";
 import { BaseEvent } from "../BaseEntity";
 import { LabelModel } from "./LabelModel";
 import { DiagramEngine } from "../DiagramEngine";
@@ -32,14 +34,14 @@ export class LinkModel<T extends LinkModelListener = LinkModelListener> extends 
 	deSerialize(ob, engine: DiagramEngine) {
 		super.deSerialize(ob, engine);
 		this.extras = ob.extras;
-		this.points = _.map(ob.points || [], (point: { x; y }) => {
+		this.points = map(ob.points || [], (point: { x; y }) => {
 			var p = new PointModel(this, { x: point.x, y: point.y });
 			p.deSerialize(point, engine);
 			return p;
 		});
 
 		//deserialize labels
-		_.forEach(ob.labels || [], (label: any) => {
+		forEach(ob.labels || [], (label: any) => {
 			let labelOb = engine.getLabelFactory(label.type).getNewInstance();
 			labelOb.deSerialize(label, engine);
 			this.addLabel(labelOb);
@@ -63,16 +65,16 @@ export class LinkModel<T extends LinkModelListener = LinkModelListener> extends 
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			source: this.sourcePort ? this.sourcePort.getParent().id : null,
 			sourcePort: this.sourcePort ? this.sourcePort.id : null,
 			target: this.targetPort ? this.targetPort.getParent().id : null,
 			targetPort: this.targetPort ? this.targetPort.id : null,
-			points: _.map(this.points, point => {
+			points: map(this.points, point => {
 				return point.serialize();
 			}),
 			extras: this.extras,
-			labels: _.map(this.labels, label => {
+			labels: map(this.labels, label => {
 				return label.serialize();
 			})
 		});
@@ -80,7 +82,7 @@ export class LinkModel<T extends LinkModelListener = LinkModelListener> extends 
 
 	doClone(lookupTable = {}, clone) {
 		clone.setPoints(
-			_.map(this.getPoints(), (point: PointModel) => {
+			map(this.getPoints(), (point: PointModel) => {
 				return point.clone(lookupTable);
 			})
 		);
@@ -206,7 +208,7 @@ export class LinkModel<T extends LinkModelListener = LinkModelListener> extends 
 	}
 
 	setPoints(points: PointModel[]) {
-		_.forEach(points, point => {
+		forEach(points, point => {
 			point.setParent(this);
 		});
 		this.points = points;

@@ -5,7 +5,11 @@ import { Toolkit } from "../../Toolkit";
 import { DefaultLinkFactory } from "../factories/DefaultLinkFactory";
 import { DefaultLinkModel } from "../models/DefaultLinkModel";
 import PathFinding from "../../routing/PathFinding";
-import * as _ from "lodash";
+import first from "lodash/first";
+import forEach from "lodash/forEach";
+import last from "lodash/last";
+import map from "lodash/map";
+
 import { LabelModel } from "../../models/LabelModel";
 import { BaseWidget, BaseWidgetProps } from "../../widgets/BaseWidget";
 
@@ -53,7 +57,7 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 	}
 
 	calculateAllLabelPosition() {
-		_.forEach(this.props.link.labels, (label, index) => {
+		forEach(this.props.link.labels, (label, index) => {
 			this.calculateLabelPosition(label, index + 1);
 		});
 	}
@@ -267,7 +271,7 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 
 		if (this.isSmartRoutingApplicable()) {
 			// first step: calculate a direct path between the points being linked
-			const directPathCoords = this.pathFinding.calculateDirectPath(_.first(points), _.last(points));
+			const directPathCoords = this.pathFinding.calculateDirectPath(first(points), last(points));
 
 			const routingMatrix = diagramEngine.getRoutingMatrix();
 			// now we need to extract, from the routing matrix, the very first walkable points
@@ -374,7 +378,7 @@ export class DefaultLinkWidget extends BaseWidget<DefaultLinkProps, DefaultLinkS
 		return (
 			<g {...this.getProps()}>
 				{paths}
-				{_.map(this.props.link.labels, labelModel => {
+				{map(this.props.link.labels, labelModel => {
 					return this.generateLabel(labelModel);
 				})}
 			</g>

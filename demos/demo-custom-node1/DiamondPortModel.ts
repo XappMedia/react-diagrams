@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import merge from "lodash/merge";
 import { LinkModel, DiagramEngine, PortModel, DefaultLinkModel } from "storm-react-diagrams";
 
 export class DiamondPortModel extends PortModel {
@@ -10,7 +10,7 @@ export class DiamondPortModel extends PortModel {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			position: this.position
 		});
 	}

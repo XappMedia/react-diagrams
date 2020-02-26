@@ -1,7 +1,12 @@
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { NodeModel } from "./NodeModel";
 import { LinkModel } from "./LinkModel";
-import * as _ from "lodash";
+import isFinite from "lodash/isFinite";
+import map from "lodash/map";
+import merge from "lodash/merge";
+import size from "lodash/size";
+import values from "lodash/values";
+
 import { DiagramEngine } from "../DiagramEngine";
 
 export class PortModel extends BaseModel<NodeModel, BaseModelListener> {
@@ -29,10 +34,10 @@ export class PortModel extends BaseModel<NodeModel, BaseModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			name: this.name,
 			parentNode: this.parent.id,
-			links: _.map(this.links, link => {
+			links: map(this.links, link => {
 				return link.id;
 			}),
 			maximumLinks: this.maximumLinks
@@ -73,10 +78,10 @@ export class PortModel extends BaseModel<NodeModel, BaseModelListener> {
 	}
 
 	public createLinkModel(): LinkModel | null {
-		if (_.isFinite(this.maximumLinks)) {
-			var numberOfLinks: number = _.size(this.links);
+		if (isFinite(this.maximumLinks)) {
+			var numberOfLinks: number = size(this.links);
 			if (this.maximumLinks === 1 && numberOfLinks >= 1) {
-				return _.values(this.links)[0];
+				return values(this.links)[0];
 			} else if (numberOfLinks >= this.maximumLinks) {
 				return null;
 			}
