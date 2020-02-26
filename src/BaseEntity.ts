@@ -1,5 +1,6 @@
 import { Toolkit } from "./Toolkit";
-import * as _ from "lodash";
+import ldClone from "lodash/clone";
+
 import { DiagramEngine } from "./DiagramEngine";
 
 /**
@@ -42,7 +43,7 @@ export class BaseEntity<T extends BaseListener = BaseListener> {
 		if (lookupTable[this.id]) {
 			return lookupTable[this.id];
 		}
-		let clone = _.clone(this);
+		let clone = ldClone(this);
 		clone.id = Toolkit.UID();
 		clone.clearListeners();
 		lookupTable[this.id] = clone;

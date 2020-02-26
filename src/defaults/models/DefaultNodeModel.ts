@@ -1,5 +1,6 @@
 import { DefaultPortModel } from "./DefaultPortModel";
-import * as _ from "lodash";
+import filter from "lodash/filter";
+import merge from "lodash/merge";
 
 import { NodeModel, NodeModelListener } from "../../models/NodeModel";
 import { Toolkit } from "../../Toolkit";
@@ -34,20 +35,20 @@ export class DefaultNodeModel extends NodeModel<NodeModelListener> {
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			name: this.name,
 			color: this.color
 		});
 	}
 
 	getInPorts(): DefaultPortModel[] {
-		return _.filter(this.ports, portModel => {
+		return filter(this.ports, portModel => {
 			return portModel.in;
 		});
 	}
 
 	getOutPorts(): DefaultPortModel[] {
-		return _.filter(this.ports, portModel => {
+		return filter(this.ports, portModel => {
 			return !portModel.in;
 		});
 	}

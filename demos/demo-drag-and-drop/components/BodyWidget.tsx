@@ -1,5 +1,6 @@
 import * as React from "react";
-import * as _ from "lodash";
+import keys from "lodash/keys";
+
 import { TrayWidget } from "./TrayWidget";
 import { Application } from "../Application";
 import { TrayItemWidget } from "./TrayItemWidget";
@@ -35,7 +36,7 @@ export class BodyWidget extends React.Component<BodyWidgetProps, BodyWidgetState
 						className="diagram-layer"
 						onDrop={event => {
 							var data = JSON.parse(event.dataTransfer.getData("storm-diagram-node"));
-							var nodesCount = _.keys(
+							var nodesCount = keys(
 								this.props.app
 									.getDiagramEngine()
 									.getDiagramModel()

@@ -1,5 +1,6 @@
 import * as React from "react";
-import * as _ from "lodash";
+import map from "lodash/map";
+
 import { DefaultNodeModel } from "../models/DefaultNodeModel";
 import { DefaultPortLabel } from "./DefaultPortLabelWidget";
 import { DiagramEngine } from "../../DiagramEngine";
@@ -33,10 +34,10 @@ export class DefaultNodeWidget extends BaseWidget<DefaultNodeProps, DefaultNodeS
 				</div>
 				<div className={this.bem("__ports")}>
 					<div className={this.bem("__in")}>
-						{_.map(this.props.node.getInPorts(), this.generatePort.bind(this))}
+						{map(this.props.node.getInPorts(), this.generatePort.bind(this))}
 					</div>
 					<div className={this.bem("__out")}>
-						{_.map(this.props.node.getOutPorts(), this.generatePort.bind(this))}
+						{map(this.props.node.getOutPorts(), this.generatePort.bind(this))}
 					</div>
 				</div>
 			</div>

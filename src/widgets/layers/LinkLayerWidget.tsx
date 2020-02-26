@@ -1,7 +1,8 @@
 import * as React from "react";
 import { DiagramEngine } from "../../DiagramEngine";
 import { LinkWidget } from "../LinkWidget";
-import * as _ from "lodash";
+import last from "lodash/last";
+import map from "lodash/map";
 import { PointModel } from "../../models/PointModel";
 import { BaseWidget, BaseWidgetProps } from "../BaseWidget";
 
@@ -39,7 +40,7 @@ export class LinkLayerWidget extends BaseWidget<LinkLayerProps, LinkLayerState> 
 			>
 				{//only perform these actions when we have a diagram
 				this.props.diagramEngine.canvas &&
-					_.map(diagramModel.getLinks(), link => {
+					map(diagramModel.getLinks(), link => {
 						if (
 							this.props.diagramEngine.nodesRendered &&
 							!this.props.diagramEngine.linksThatHaveInitiallyRendered[link.id]
@@ -60,7 +61,7 @@ export class LinkLayerWidget extends BaseWidget<LinkLayerProps, LinkLayerState> 
 							if (link.targetPort !== null) {
 								try {
 									const portCenter = this.props.diagramEngine.getPortCenter(link.targetPort);
-									_.last(link.points).updateLocation(portCenter);
+									last(link.points).updateLocation(portCenter);
 
 									const portCoords = this.props.diagramEngine.getPortCoords(link.targetPort);
 									link.targetPort.updateCoords(portCoords);

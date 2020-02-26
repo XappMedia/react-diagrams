@@ -1,6 +1,14 @@
 import { BaseEntity, BaseListener } from "./BaseEntity";
 import { DiagramModel } from "./models/DiagramModel";
-import * as _ from "lodash";
+import cloneDeep from "lodash/cloneDeep";
+import concat from "lodash/concat";
+import flatMap from "lodash/flatMap";
+import forEach from "lodash/forEach";
+import maxBy from "lodash/maxBy";
+import minBy from "lodash/minBy";
+import range from "lodash/range";
+import values from "lodash/values";
+
 import { BaseModel, BaseModelListener } from "./models/BaseModel";
 import { NodeModel } from "./models/NodeModel";
 import { PointModel } from "./models/PointModel";
@@ -117,8 +125,8 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		entities.forEach(entity => {
 			//if a node is requested to repaint, add all of its links
 			if (entity instanceof NodeModel) {
-				_.forEach(entity.getPorts(), port => {
-					_.forEach(port.getLinks(), link => {
+				forEach(entity.getPorts(), port => {
+					forEach(port.getLinks(), link => {
 						this.paintableWidgets[link.getID()] = true;
 					});
 				});
@@ -429,7 +437,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		const matrixWidth = Math.ceil(canvasWidth / ROUTING_SCALING_FACTOR);
 		const matrixHeight = Math.ceil(canvasHeight / ROUTING_SCALING_FACTOR);
 
-		this.canvasMatrix = _.range(0, matrixHeight).map(() => {
+		this.canvasMatrix = range(0, matrixHeight).map(() => {
 			return new Array(matrixWidth).fill(0);
 		});
 	}
@@ -456,7 +464,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		return this.routingMatrix;
 	}
 	calculateRoutingMatrix(): void {
-		const matrix = _.cloneDeep(this.getCanvasMatrix());
+		const matrix = cloneDeep(this.getCanvasMatrix());
 
 		// nodes need to be marked as blocked points
 		this.markNodes(matrix);
@@ -488,15 +496,15 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		height: number;
 		vAdjustmentFactor: number;
 	} => {
-		const allNodesCoords = _.values(this.diagramModel.nodes).map(item => ({
+		const allNodesCoords = values(this.diagramModel.nodes).map(item => ({
 			x: item.x,
 			width: item.width,
 			y: item.y,
 			height: item.height
 		}));
 
-		const allLinks = _.values(this.diagramModel.links);
-		const allPortsCoords = _.flatMap(allLinks.map(link => [link.sourcePort, link.targetPort]))
+		const allLinks = values(this.diagramModel.links);
+		const allPortsCoords = flatMap(allLinks.map(link => [link.sourcePort, link.targetPort]))
 			.filter(port => port !== null)
 			.map(item => ({
 				x: item.x,
@@ -504,7 +512,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 				y: item.y,
 				height: item.height
 			}));
-		const allPointsCoords = _.flatMap(allLinks.map(link => link.points)).map(item => ({
+		const allPointsCoords = flatMap(allLinks.map(link => link.points)).map(item => ({
 			// points don't have width/height, so let's just use 0
 			x: item.x,
 			width: 0,
@@ -515,22 +523,19 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 		const canvas = this.canvas as HTMLDivElement;
 		const minX =
 			Math.floor(
-				Math.min(_.minBy(_.concat(allNodesCoords, allPortsCoords, allPointsCoords), item => item.x).x, 0) /
+				Math.min(minBy(concat(allNodesCoords, allPortsCoords, allPointsCoords), item => item.x).x, 0) /
 					ROUTING_SCALING_FACTOR
 			) * ROUTING_SCALING_FACTOR;
-		const maxXElement = _.maxBy(
-			_.concat(allNodesCoords, allPortsCoords, allPointsCoords),
-			item => item.x + item.width
-		);
+		const maxXElement = maxBy(concat(allNodesCoords, allPortsCoords, allPointsCoords), item => item.x + item.width);
 		const maxX = Math.max(maxXElement.x + maxXElement.width, canvas.offsetWidth);
 
 		const minY =
 			Math.floor(
-				Math.min(_.minBy(_.concat(allNodesCoords, allPortsCoords, allPointsCoords), item => item.y).y, 0) /
+				Math.min(minBy(concat(allNodesCoords, allPortsCoords, allPointsCoords), item => item.y).y, 0) /
 					ROUTING_SCALING_FACTOR
 			) * ROUTING_SCALING_FACTOR;
-		const maxYElement = _.maxBy(
-			_.concat(allNodesCoords, allPortsCoords, allPointsCoords),
+		const maxYElement = maxBy(
+			concat(allNodesCoords, allPortsCoords, allPointsCoords),
 			item => item.y + item.height
 		);
 		const maxY = Math.max(maxYElement.y + maxYElement.height, canvas.offsetHeight);
@@ -547,7 +552,7 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 	 * Updates (by reference) where nodes will be drawn on the matrix passed in.
 	 */
 	markNodes = (matrix: number[][]): void => {
-		_.values(this.diagramModel.nodes).forEach(node => {
+		values(this.diagramModel.nodes).forEach(node => {
 			const startX = Math.floor(node.x / ROUTING_SCALING_FACTOR);
 			const endX = Math.ceil((node.x + node.width) / ROUTING_SCALING_FACTOR);
 			const startY = Math.floor(node.y / ROUTING_SCALING_FACTOR);
@@ -565,21 +570,23 @@ export class DiagramEngine extends BaseEntity<DiagramEngineListener> {
 	 * Updates (by reference) where ports will be drawn on the matrix passed in.
 	 */
 	markPorts = (matrix: number[][]): void => {
-		const allElements = _.flatMap(
-			_.values(this.diagramModel.links).map(link => [].concat(link.sourcePort, link.targetPort))
+		const allElements = flatMap(
+			values(this.diagramModel.links).map(link => [].concat(link.sourcePort, link.targetPort))
 		);
-		allElements.filter(port => port !== null).forEach(port => {
-			const startX = Math.floor(port.x / ROUTING_SCALING_FACTOR);
-			const endX = Math.ceil((port.x + port.width) / ROUTING_SCALING_FACTOR);
-			const startY = Math.floor(port.y / ROUTING_SCALING_FACTOR);
-			const endY = Math.ceil((port.y + port.height) / ROUTING_SCALING_FACTOR);
+		allElements
+			.filter(port => port !== null)
+			.forEach(port => {
+				const startX = Math.floor(port.x / ROUTING_SCALING_FACTOR);
+				const endX = Math.ceil((port.x + port.width) / ROUTING_SCALING_FACTOR);
+				const startY = Math.floor(port.y / ROUTING_SCALING_FACTOR);
+				const endY = Math.ceil((port.y + port.height) / ROUTING_SCALING_FACTOR);
 
-			for (let x = startX - 1; x <= endX + 1; x++) {
-				for (let y = startY - 1; y < endY + 1; y++) {
-					this.markMatrixPoint(matrix, this.translateRoutingX(x), this.translateRoutingY(y));
+				for (let x = startX - 1; x <= endX + 1; x++) {
+					for (let y = startY - 1; y < endY + 1; y++) {
+						this.markMatrixPoint(matrix, this.translateRoutingX(x), this.translateRoutingY(y));
+					}
 				}
-			}
-		});
+			});
 	};
 
 	markMatrixPoint = (matrix: number[][], x: number, y: number) => {

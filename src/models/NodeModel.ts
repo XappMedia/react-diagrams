@@ -2,7 +2,9 @@ import { BaseEvent } from "../BaseEntity";
 import { BaseModel, BaseModelListener } from "./BaseModel";
 import { LinkModel, LinkModelListener } from "./LinkModel";
 import { PortModel } from "./PortModel";
-import * as _ from "lodash";
+import forEach from "lodash/forEach";
+import map from "lodash/map";
+import merge from "lodash/merge";
 import { DiagramEngine } from "../DiagramEngine";
 import { DiagramModel } from "./DiagramModel";
 
@@ -33,8 +35,8 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 		//store position
 		let oldX = this.x;
 		let oldY = this.y;
-		_.forEach(this.ports, port => {
-			_.forEach(port.getLinks(), link => {
+		forEach(this.ports, port => {
+			forEach(port.getLinks(), link => {
 				let point = link.getPointForPort(port);
 				point.x = point.x + x - oldX;
 				point.y = point.y + y - oldY;
@@ -47,7 +49,7 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 	nodeClicked() {
 		this.iterateListeners(
 			(listener: NodeModelListener, event) => listener.nodeClicked && listener.nodeClicked(event)
-		)
+		);
 	}
 
 	positionChanged() {
@@ -61,9 +63,9 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 
 		// add the points of each link that are selected here
 		if (this.isSelected()) {
-			_.forEach(this.ports, port => {
+			forEach(this.ports, port => {
 				entities = entities.concat(
-					_.map(port.getLinks(), link => {
+					map(port.getLinks(), link => {
 						return link.getPointForPort(port);
 					})
 				);
@@ -79,7 +81,7 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 		this.extras = ob.extras;
 
 		//deserialize ports
-		_.forEach(ob.ports, (port: any) => {
+		forEach(ob.ports, (port: any) => {
 			let portOb = engine.getPortFactory(port.type).getNewInstance();
 			portOb.deSerialize(port, engine);
 			this.addPort(portOb);
@@ -87,11 +89,11 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 	}
 
 	serialize() {
-		return _.merge(super.serialize(), {
+		return merge(super.serialize(), {
 			x: this.x,
 			y: this.y,
 			extras: this.extras,
-			ports: _.map(this.ports, port => {
+			ports: map(this.ports, port => {
 				return port.serialize();
 			})
 		});
@@ -100,15 +102,15 @@ export class NodeModel<T extends NodeModelListener = NodeModelListener> extends 
 	doClone(lookupTable = {}, clone) {
 		// also clone the ports
 		clone.ports = {};
-		_.forEach(this.ports, port => {
+		forEach(this.ports, port => {
 			clone.addPort(port.clone(lookupTable));
 		});
 	}
 
 	remove() {
 		super.remove();
-		_.forEach(this.ports, port => {
-			_.forEach(port.getLinks(), link => {
+		forEach(this.ports, port => {
+			forEach(port.getLinks(), link => {
 				link.remove();
 			});
 		});
